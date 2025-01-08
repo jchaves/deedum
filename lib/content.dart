@@ -129,7 +129,8 @@ class _ContentState extends State<Content> {
 
   getPreTextWidget(r) {
     changeAnsi();
-    if (ansiLevel == 0){
+    //if there are no ansi codes, this might save some battery/processing
+    if ((ansiLevel == 0) || (!r["data"].toString().contains('['))){
       return PreText(actualText: r["data"], maxLine: r["maxLine"]);
     }
     return AnsiPreText(actualText: r["data"],
