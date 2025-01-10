@@ -21,6 +21,8 @@ void main() async {
           "CREATE TABLE feeds(uri TEXT PRIMARY KEY, content TEXT, last_fetched_at TEXT, attempts INTEGER default 0)");
       db.execute(
           "CREATE TABLE identities(name TEXT PRIMARY KEY, cert TEXT, private_key TEXT)");
+      db.execute(
+          "CREATE TABLE uri_identities(identity TEXT, uri TEXT, PRIMARY KEY (identity, uri))");
     },
     onUpgrade: (db, old, _new) {
       if (old == 1) {
@@ -36,8 +38,12 @@ void main() async {
         db.execute(
             "CREATE TABLE identities(name TEXT PRIMARY KEY, cert TEXT, private_key TEXT)");
       }
+      if (old == 4){
+        db.execute(
+            "CREATE TABLE uri_identities(identity TEXT, uri TEXT, PRIMARY KEY (identity, uri))");
+      }
     },
-    version: 4,
+    version: 5,
   );
 
   runApp(const ProviderScope(child: App()));

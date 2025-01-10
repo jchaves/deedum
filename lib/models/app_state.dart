@@ -41,7 +41,8 @@ class AppState with ChangeNotifier {
       "homepage": (prefs.getString("homepage")),
       "ansiColors": (prefs.getString("ansiColors") ?? "0"),
       "search":
-          (prefs.getString("search") ?? "gemini://geminispace.info/search")
+         // (prefs.getString("search") ?? "gemini://geminispace.info/search")
+        (prefs.getString("search") ?? "gemini://kennedy.gemi.dev/search")
     };
     updateFeeds();
     final Database db = database;
@@ -50,6 +51,10 @@ class AppState with ChangeNotifier {
       var identity = Identity(row["name"] as String,
           existingCertString: row["cert"] as String,
           existingPrivateKeyString: row["private_key"] as String);
+      var pages = await db.rawQuery("select * from uri_identities where identity LIKE ?", [row["name"]]);
+      for(var page in pages){
+        identity.addPage(page["uri"] as String);
+      }
       identities.add(identity);
     }
     onNewTab(null);
@@ -260,12 +265,17 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  void onIdentity(Identity identity, Uri uri) {
+  void onIdentity(Identity identity, Uri uri) async{
+    final Database db = database;
     if (identity.matches(uri)) {
-      identity.pages
-          .removeWhere((element) => uri.toString().startsWith(element));
+      identity.pages.removeWhere((element) => uri.toString().startsWith(element));
+      await db.rawDelete("delete from uri_identities where uri LIKE ? AND identity LIKE ?",
+          [uri.toString(),identity.name]);
     } else {
       identity.addPage(uri.toString());
+      await db.rawInsert(
+          "insert or replace into uri_identities (uri, identity) values (?,?)",
+          [uri.toString(), identity.name]);
     }
     notifyListeners();
   }
