@@ -42,4 +42,5 @@ source Envfile
 - Gopher ?
 - add some visual feedback on link-ontap ?
 - inline images ?
-- remember open tabs on exit? (or at least ask when closing with some open) 
+- remember open tabs on exit? (or at least ask when closing with some open)
+- find text in page ?
