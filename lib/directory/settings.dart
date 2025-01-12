@@ -1,5 +1,6 @@
 import 'package:deedum/models/app_state.dart';
 import 'package:deedum/directory/directory_element.dart';
+import 'package:deedum/next/themes_provider.dart';
 import 'package:deedum/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,11 +69,16 @@ class Settings extends DirectoryElement {
                       appState.onSaveSettings("ansiColors", index.toString());
                     },
                   ),
-                  // SwitchListTile(title: const Text( "Use Ansi Color"), value: bool.parse(appState.settings["ansiColors"]),  onChanged: (ansi) {
-                  //    appState.onSaveSettings("ansiColors", ansi.toString());
-                  //    //TODO: update in real time
-                  // })
-
+                  Text("Theme"),
+                  ToggleSwitch(
+                    isVertical: true,
+                    initialLabelIndex: int.parse(appState.settings["theme"]),
+                    labels: ['System','Light','Dark'],
+                    onToggle: (index) {
+                      appState.onSaveSettings("theme", index.toString());
+                      ref.read(themesProvider.notifier).changeTheme(index!);
+                    },
+                  ),
                 ]))),
       )
     ];
