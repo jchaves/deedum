@@ -90,10 +90,15 @@ class _ContentState extends State<Content> {
           "\n\n-----------------------------------\n\n" +
           (widget.contentData!.source() ?? ""));
     } else if (widget.contentData!.mode == Modes.image) {
-      return Image.memory(widget.contentData!.body()!, errorBuilder:
-          (BuildContext context, Object exception, StackTrace? stackTrace) {
-        return const ExtendedText("broken image ¯\\_(ツ)_/¯");
-      });
+      return InteractiveViewer(
+          clipBehavior: Clip.none,
+          child:
+          Image.memory(
+              widget.contentData!.body()!,
+              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                    return const ExtendedText("broken image ¯\\_(ツ)_/¯");
+              })
+      );
     } else {
       return ExtendedText("Unknown mode ${widget.contentData!.mode}");
     }
