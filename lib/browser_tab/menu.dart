@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 enum _MenuSelection {
+  refresh,
   logs,
   source,
   bookmark,
@@ -98,6 +99,17 @@ class TabMenuWidget extends ConsumerWidget {
         return [
           PopupMenuItem(
             child: ListTile(
+                leading: Icon(Icons.refresh, color: Colors.black),
+                title: Text("Refresh",
+                    style: TextStyle(
+                        color:  (currentUri != null)
+                            ? null
+                            : Theme.of(context).disabledColor))),
+            enabled: (currentUri != null) ,
+            value: _MenuSelection.refresh,
+          ),
+          PopupMenuItem(
+            child: ListTile(
                 leading: const Text("", textAlign: TextAlign.center),
                 title: Text("Go to root",
                     style: TextStyle(
@@ -174,6 +186,11 @@ class TabMenuWidget extends ConsumerWidget {
       },
       onSelected: (result) async {
         switch (result) {
+          case _MenuSelection.refresh:
+            if (currentUri != null) {
+              appState.onLocation(currentUri);
+            }
+            break;
           case _MenuSelection.logs:
             showLogs(context, appState);
             break;
