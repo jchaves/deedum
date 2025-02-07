@@ -34,6 +34,7 @@ class Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppState appState = ref.watch(appStateProvider);
     var tabCount = appState.tabCount();
+    var currentTab = appState.currentTabIndex()+1;
     if (_controller.text.isEmpty && appState.currentUri() != null) {
       _controller.text = appState.currentUri().toString();
     }
@@ -64,16 +65,16 @@ class Home extends ConsumerWidget {
 
     List<Widget> actions = [];
     actions = [
-      IconButton(
-        icon: Icon(Icons.refresh),
-          color: Colors.black,
-          onPressed: () =>{
-            appState.onLocation(appState.currentUri())
-          }
-      ),
+      // IconButton(
+      //   icon: Icon(Icons.refresh),
+      //     color: Colors.black,
+      //     onPressed: () =>{
+      //       appState.onLocation(appState.currentUri())
+      //     }
+      // ),
       IconButton(
         icon: SizedBox(
-            width: 23,
+            // width: 23,
             height: 23,
             child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -82,7 +83,7 @@ class Home extends ConsumerWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(3))),
                 child: Align(
                     alignment: Alignment.center,
-                    child: Text("$tabCount",
+                    child: Text("$currentTab/$tabCount",
                         textScaleFactor: 1.15,
                         style: const TextStyle(
                             color: Colors.black,
