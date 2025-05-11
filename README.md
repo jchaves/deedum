@@ -1,9 +1,9 @@
-# deedum
+# DumDeeDum, evolving from deedum
 
 A browser for the gemini protocol.
 
 
-A [Project Gemini](https://gemini.circumlunar.space/) browser.
+A [Gemini Protocol](https://geminiprotocol.net/) browser.
 
 Gemini is a new, collaboratively designed internet protocol, which explores the space in between gopher and the web, striving to address (perceived) limitations of one while avoiding the (undeniable) pitfalls of the other.
 
@@ -16,6 +16,16 @@ Build should just require installing [flutter](https://flutter.dev/), connecting
 flutter build apk --debug
 flutter install
 ```
+
+Notes for myself and anyone who might need it:
+Right now this code seems to compile only using 
+- flutter 2.8.1-stable
+- gradle gradle-7.4 (android/gradle/wrapper/gradle-wrapper.properties)
+
+TODO: maybe update all the dependencies and everything so it builds in an up-to-date environment
+(to be honest, last thing I want is to waste my time keeping up with android development and their
+ever-changing best practices, versions, frameworks...)
+
 
 I haven't been able to get ios building yet because of xcode / macos version restrictions.
 
@@ -37,6 +47,7 @@ source Envfile
 ./release
 ```
 # Future ?
+- zoomable images (should be done, could be better perhaps)
 - identities linked to pages should be remembered between sessions ? (should be done?)
 - automatically detect if there are ANSI codes and not bother processing a pre-text if not? (should be done)
 - Gopher ?

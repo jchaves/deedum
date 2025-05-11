@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:terminal_color_parser/terminal_color_parser.dart';
 
-import 'package:deedum/shared.dart';
+import 'package:dumdeedum/shared.dart';
 
-import 'package:deedum/models/ansi_color.dart';
+import 'package:dumdeedum/models/ansi_color.dart';
 
 
 class AnsiPreText extends StatefulWidget {

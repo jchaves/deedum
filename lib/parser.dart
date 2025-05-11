@@ -5,7 +5,7 @@ import 'dart:math' as math;
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:deedum/models/content_data.dart';
+import 'package:dumdeedum/models/content_data.dart';
 
 const allowMalformedUtf8Decoder = Utf8Decoder(allowMalformed: true);
 

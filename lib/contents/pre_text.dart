@@ -2,7 +2,7 @@
 import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 
-import 'package:deedum/shared.dart';
+import 'package:dumdeedum/shared.dart';
 
 
 class PreText extends StatefulWidget {

@@ -1,9 +1,9 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:deedum/models/app_state.dart';
-import 'package:deedum/models/identity.dart';
-import 'package:deedum/shared.dart';
+import 'package:dumdeedum/models/app_state.dart';
+import 'package:dumdeedum/models/identity.dart';
+import 'package:dumdeedum/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

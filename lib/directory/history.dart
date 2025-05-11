@@ -1,7 +1,7 @@
-import 'package:deedum/models/app_state.dart';
-import 'package:deedum/directory/directory_element.dart';
-import 'package:deedum/directory/gem_item.dart';
-import 'package:deedum/next/app.dart';
+import 'package:dumdeedum/models/app_state.dart';
+import 'package:dumdeedum/directory/directory_element.dart';
+import 'package:dumdeedum/directory/gem_item.dart';
+import 'package:dumdeedum/next/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

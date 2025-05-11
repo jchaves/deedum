@@ -337,7 +337,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.2"
+    version: "6.1.5"
   punycode:
     dependency: "direct main"
     description:
@@ -502,7 +502,7 @@ packages:
     description:
       path: "."
       ref: "feature/rgb_support"
-      resolved-ref: adba5db59b8ddbe202af61e40247f92063597590
+      resolved-ref: "3f51b8530373cede948508e4d59c67b60e6f699b"
       url: "https://github.com/jchaves/terminal_color_parser_dart"
     source: git
     version: "0.7.0"

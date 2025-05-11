@@ -1,19 +1,19 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:deedum/models/app_state.dart';
-import 'package:deedum/browser_tab/menu.dart';
-import 'package:deedum/directory/bookmarks.dart';
-import 'package:deedum/directory/directory.dart';
-import 'package:deedum/directory/feeds.dart';
-import 'package:deedum/directory/history.dart';
-import 'package:deedum/directory/identities.dart';
-import 'package:deedum/directory/settings.dart';
-import 'package:deedum/directory/tabs.dart';
-import 'package:deedum/models/tab.dart';
-import 'package:deedum/next/address_bar.dart';
-import 'package:deedum/next/browser_tab.dart';
-import 'package:deedum/next/themes_provider.dart';
+import 'package:dumdeedum/models/app_state.dart';
+import 'package:dumdeedum/browser_tab/menu.dart';
+import 'package:dumdeedum/directory/bookmarks.dart';
+import 'package:dumdeedum/directory/directory.dart';
+import 'package:dumdeedum/directory/feeds.dart';
+import 'package:dumdeedum/directory/history.dart';
+import 'package:dumdeedum/directory/identities.dart';
+import 'package:dumdeedum/directory/settings.dart';
+import 'package:dumdeedum/directory/tabs.dart';
+import 'package:dumdeedum/models/tab.dart';
+import 'package:dumdeedum/next/address_bar.dart';
+import 'package:dumdeedum/next/browser_tab.dart';
+import 'package:dumdeedum/next/themes_provider.dart';
 import 'package:flutter/material.dart' hide Tab;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -134,7 +134,7 @@ class App extends ConsumerWidget {
 
 
     return MaterialApp(
-        title: 'deedum',
+        title: 'dumdeedum',
         navigatorKey: navigatorKey,
         theme: ThemeData(
           fontFamily: "Source Serif Pro",

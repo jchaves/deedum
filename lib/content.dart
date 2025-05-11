@@ -2,15 +2,15 @@
 import 'dart:developer';
 import 'dart:math' as math;
 
-import 'package:deedum/contents/blockquote.dart';
-import 'package:deedum/contents/heading.dart';
-import 'package:deedum/contents/link.dart';
-import 'package:deedum/contents/list_item.dart';
-import 'package:deedum/contents/pre_text.dart';
-import 'package:deedum/contents/plain_text.dart';
-import 'package:deedum/models/content_data.dart';
-import 'package:deedum/parser.dart';
-import 'package:deedum/shared.dart';
+import 'package:dumdeedum/contents/blockquote.dart';
+import 'package:dumdeedum/contents/heading.dart';
+import 'package:dumdeedum/contents/link.dart';
+import 'package:dumdeedum/contents/list_item.dart';
+import 'package:dumdeedum/contents/pre_text.dart';
+import 'package:dumdeedum/contents/plain_text.dart';
+import 'package:dumdeedum/models/content_data.dart';
+import 'package:dumdeedum/parser.dart';
+import 'package:dumdeedum/shared.dart';
 import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

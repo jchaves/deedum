@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:deedum/models/app_state.dart';
-import 'package:deedum/directory/directory_element.dart';
-import 'package:deedum/directory/gem_item.dart';
-import 'package:deedum/next/app.dart';
+import 'package:dumdeedum/models/app_state.dart';
+import 'package:dumdeedum/directory/directory_element.dart';
+import 'package:dumdeedum/directory/gem_item.dart';
+import 'package:dumdeedum/next/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,7 +26,7 @@ class Tabs extends DirectoryElement {
   Widget build(BuildContext context, WidgetRef ref) {
     var appState = ref.watch(appStateProvider);
     List<Widget> list = appState.indexedTabs((index, tab) {
-      var uriString = tab.uri.toString();
+      var uriString = tab.uri?.toString();
       var selected = appState.currentTabIndex() == index;
       var bookmarked = appState.bookmarks.contains(uriString);
       var feedActive =
@@ -55,11 +55,11 @@ class Tabs extends DirectoryElement {
           appState.onSelectTab(index);
           Navigator.pop(navigatorKey.currentContext!);
         },
-        onBookmark: () => appState.onBookmark(uriString),
+        onBookmark: () => appState.onBookmark(uriString!),
         onDelete: () {
           appState.onDeleteTab(index);
         },
-        onFeed: () => appState.onFeed(uriString),
+        onFeed: () => appState.onFeed(uriString!),
       );
       return Dismissible(
         background: Container(color: Colors.red),

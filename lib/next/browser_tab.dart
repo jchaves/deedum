@@ -1,12 +1,9 @@
-// ignore: unused_import
-import 'dart:developer';
-
-import 'package:deedum/models/app_state.dart';
-import 'package:deedum/content.dart';
-import 'package:deedum/models/content_data.dart';
+import 'package:dumdeedum/models/app_state.dart';
+import 'package:dumdeedum/content.dart';
+import 'package:dumdeedum/models/content_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:deedum/shared.dart';
+import 'package:dumdeedum/shared.dart';
 
 class BrowserTab extends ConsumerWidget {
   const BrowserTab(

@@ -1,14 +1,14 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:deedum/models/content_data.dart';
-import 'package:deedum/models/feed.dart';
-import 'package:deedum/models/identity.dart';
-import 'package:deedum/models/tab.dart';
-import 'package:deedum/models/tab_state.dart';
-import 'package:deedum/net.dart';
-import 'package:deedum/parser.dart';
-import 'package:deedum/shared.dart';
+import 'package:dumdeedum/models/content_data.dart';
+import 'package:dumdeedum/models/feed.dart';
+import 'package:dumdeedum/models/identity.dart';
+import 'package:dumdeedum/models/tab.dart';
+import 'package:dumdeedum/models/tab_state.dart';
+import 'package:dumdeedum/net.dart';
+import 'package:dumdeedum/parser.dart';
+import 'package:dumdeedum/shared.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

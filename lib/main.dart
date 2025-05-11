@@ -1,7 +1,7 @@
 // ignore: unused_import
 import 'dart:developer';
-import 'package:deedum/next/app.dart';
-import 'package:deedum/shared.dart';
+import 'package:dumdeedum/next/app.dart';
+import 'package:dumdeedum/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

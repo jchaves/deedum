@@ -2,12 +2,12 @@ import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:deedum/models/app_state.dart';
-import 'package:deedum/models/content_data.dart';
-import 'package:deedum/models/feed.dart';
-import 'package:deedum/models/identity.dart';
-import 'package:deedum/net.dart';
-import 'package:deedum/parser.dart';
+import 'package:dumdeedum/models/app_state.dart';
+import 'package:dumdeedum/models/content_data.dart';
+import 'package:dumdeedum/models/feed.dart';
+import 'package:dumdeedum/models/identity.dart';
+import 'package:dumdeedum/net.dart';
+import 'package:dumdeedum/parser.dart';
 import 'package:flutter/material.dart';
 
 class Tab {

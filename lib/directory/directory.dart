@@ -1,4 +1,4 @@
-import 'package:deedum/directory/directory_element.dart';
+import 'package:dumdeedum/directory/directory_element.dart';
 import 'package:flutter/material.dart';
 
 class Directory extends StatefulWidget {

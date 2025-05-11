@@ -1,9 +1,9 @@
 // ignore: unused_import
 import 'dart:developer';
 
-import 'package:deedum/models/app_state.dart';
-import 'package:deedum/browser_tab/client_cert.dart';
-import 'package:deedum/browser_tab/search.dart';
+import 'package:dumdeedum/models/app_state.dart';
+import 'package:dumdeedum/browser_tab/client_cert.dart';
+import 'package:dumdeedum/browser_tab/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

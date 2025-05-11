@@ -1,4 +1,4 @@
-import 'package:deedum/models/tab.dart';
+import 'package:dumdeedum/models/tab.dart';
 
 class TabState {
   int tabIndex = -1;
