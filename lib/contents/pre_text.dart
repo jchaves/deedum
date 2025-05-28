@@ -46,7 +46,7 @@ class _PreTextState extends State<PreText> {
           scrollDirection: Axis.horizontal,
           child: ExtendedText(
             widget.actualText,
-            selectionEnabled: true,
+            // selectionEnabled: true,
             style: const TextStyle(
               fontFamily: "DejaVu Sans Mono",
               fontSize: baseFontSize,
@@ -74,7 +74,7 @@ class _PreTextState extends State<PreText> {
           child: SizedBox(
             width: size,
             child: ExtendedText(widget.actualText,
-              selectionEnabled: true,
+              // selectionEnabled: true,
               softWrap: true,
               style: const TextStyle(
                   fontFamily: "DejaVu Sans Mono", fontSize: baseFontSize),
@@ -83,7 +83,7 @@ class _PreTextState extends State<PreText> {
     } else {
       fit = FittedBox(
           child: ExtendedText(widget.actualText,
-		      selectionEnabled: true,
+		      // selectionEnabled: true,
               style: const TextStyle(
                   fontFamily: "DejaVu Sans Mono", fontSize: baseFontSize)),
           fit: BoxFit.fill);

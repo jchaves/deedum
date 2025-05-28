@@ -17,7 +17,7 @@ class Heading extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
       child: ExtendedText(
         content,
-        selectionEnabled: true,
+        // selectionEnabled: true,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: fontSize,

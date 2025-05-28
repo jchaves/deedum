@@ -45,7 +45,7 @@ class BrowserTab extends ConsumerWidget {
                   style: TextStyle(
                       inherit: true,
                       fontSize: baseFontSize,
-                      color: Theme.of(context).textTheme.bodyText1!.color)),
+                      color: Theme.of(context).textTheme.bodyMedium?.color)),
             )));
   }
 }

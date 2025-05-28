@@ -18,7 +18,7 @@ class ListItem extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: ExtendedText(
                 content,
-                selectionEnabled: true,
+                // selectionEnabled: true,
                 style:
                     const TextStyle(fontWeight: FontWeight.w400, height: 1.7),
               ),
