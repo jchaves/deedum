@@ -74,7 +74,7 @@ class AddressBar extends ConsumerWidget {
                       (newURL.scheme == "gemini" ||
                           newURL.scheme == "about" ||
                           validator.isURL(value, {
-                            "protocols": ['gemini'],
+                            "protocols": ['gemini', 'gopher'],
                             "require_tld": true,
                             "require_protocol": false,
                             "allow_underscores": true
