@@ -61,7 +61,11 @@ class Tab {
       return;
     }
     if (parsedData != null) {
-      parse(parsedData!, newBytes);
+      if(location.scheme == 'gopher'){
+        parseGopher(parsedData!, newBytes);
+      }else {
+        parse(parsedData!, newBytes);
+      }
       if (parsedData!.lineBased()) {
         contentData = parsedData;
         contentData?.loadedUri = location;

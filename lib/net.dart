@@ -77,25 +77,25 @@ Future<void> handleCert(Uri uri, X509Certificate serverCert) async {
             title: const Text("The server's certificate does not match."),
             content: SingleChildScrollView(
                 child: Column(
-              children: <Widget>[
-                const Text(
-                    "You should confirm out-of-band that this is expected.\n"),
-                SizedBox(
-                    width: length,
-                    height: length,
-                    child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: SelectableText(qrEncode(tofuHash as Uint8List),
-                            style: const TextStyle(
-                                fontFamily: "DejaVu Sans Mono")))),
-                Text([
-                  "subject: ${serverCert.subject}",
-                  "issuer: ${serverCert.issuer}",
-                  "start: ${DateFormat("y-M-d h:m").format(serverCert.startValidity)}",
-                  "end: ${DateFormat("y-M-d h:m").format(serverCert.endValidity)}"
-                ].join("\n"))
-              ],
-            )),
+                  children: <Widget>[
+                    const Text(
+                        "You should confirm out-of-band that this is expected.\n"),
+                    SizedBox(
+                        width: length,
+                        height: length,
+                        child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: SelectableText(qrEncode(tofuHash as Uint8List),
+                                style: const TextStyle(
+                                    fontFamily: "DejaVu Sans Mono")))),
+                    Text([
+                      "subject: ${serverCert.subject}",
+                      "issuer: ${serverCert.issuer}",
+                      "start: ${DateFormat("y-M-d h:m").format(serverCert.startValidity)}",
+                      "end: ${DateFormat("y-M-d h:m").format(serverCert.endValidity)}"
+                    ].join("\n"))
+                  ],
+                )),
             actions: <Widget>[
               TextButton(
                 child: const Text('I accept the new certificate'),
@@ -167,14 +167,22 @@ Future<void> onURI(
       }).join("\n\n");
       var result = "20 text/gemini\r\n# Your feeds\n\n" + entries;
       handleBytes(uri, const Utf8Encoder().convert(result), requestID);
-    } else if (uri.scheme != "gemini") {
+    } else if (uri.scheme != "gemini" && uri.scheme != "gopher") {
       if (await canLaunch(uri.toString())) {
         launch(uri.toString());
         opened = true;
       } else {
         handleLog("error", "Cannot find app to handle $uri", requestID);
       }
-    } else {
+    }else if (uri.scheme == "gopher") {
+      //we're doing gopher
+      handleLog("info", "Connecting to $uri", requestID);
+      var socket = await connectGopher(uri, handleLog, requestID);
+      handleLog("info", "Connected to $uri", requestID);
+      timeout = await fetchGopher(uri, socket, handleBytes, handleLog, requestID);
+    }
+
+    else {
       handleLog("info", "Connecting to $uri", requestID);
       var socket = await connect(uri, handleLog, identities, requestID);
       handleLog("info", "Connected to $uri", requestID);
@@ -211,6 +219,18 @@ Future<RawSecureSocket> connect(
   });
 }
 
+
+Future<RawSocket> connectGopher(
+    Uri uri,
+    void Function(String, String, int) handleLog,
+    int requestId) async {
+  var port = uri.hasPort ? uri.port : 70;
+
+  return await RawSocket.connect(uri.host, port,
+      timeout: const Duration(seconds: 10)
+  );
+}
+
 Future<bool> fetch(
     Uri uri,
     RawSecureSocket socket,
@@ -221,6 +241,66 @@ Future<bool> fetch(
   var writeBuffer = const Utf8Encoder().convert(uri.toString() + "\r\n");
 
   var writeOffset = socket.write(writeBuffer);
+
+  var x = socket.timeout(const Duration(seconds: 10), onTimeout: (x) {
+    handleLog("info", "Timeout $uri", requestID);
+    timeout = true;
+    x.close();
+  });
+
+  await x.listen((event) {
+    switch (event) {
+      case RawSocketEvent.read:
+        handleBytes(uri, socket.read(), requestID);
+        break;
+      case RawSocketEvent.write:
+        if (writeOffset != writeBuffer.length) {
+          writeOffset += socket.write(writeBuffer, writeOffset);
+        } else {
+          handleLog("info", "Request done $uri", requestID);
+        }
+        break;
+      case RawSocketEvent.readClosed:
+        socket.close();
+        handleLog("info", "Read closed $uri", requestID);
+        break;
+      case RawSocketEvent.closed:
+        socket.close();
+        handleLog("info", "ReadSocket closed $uri", requestID);
+        break;
+      default:
+        throw "Unexpected event $event";
+    }
+  }).asFuture();
+  socket.close();
+
+  return timeout;
+}
+
+
+Future<bool> fetchGopher(
+    Uri uri,
+    RawSocket socket,
+    void Function(Uri, Uint8List?, int) handleBytes,
+    void Function(String, String, int) handleLog,
+    int requestID) async {
+  var timeout = false;
+
+  String itemType = "1";
+  String selector = "";
+  if (uri.path.length >= 2){
+    itemType = uri.pathSegments.first;
+    if (uri.path.length >3) {
+      selector = uri.path.substring(3);
+    }
+  }
+
+  var writeBuffer = const Utf8Encoder().convert(selector+"\r\n");
+
+  var writeOffset = socket.write(writeBuffer);
+
+  handleLog("debug", "this is the URI $uri", requestID);
+  handleLog("debug", "this is the path ${selector}", requestID);
 
   var x = socket.timeout(const Duration(seconds: 10), onTimeout: (x) {
     handleLog("info", "Timeout $uri", requestID);

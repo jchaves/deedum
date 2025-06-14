@@ -130,7 +130,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppState appState = ref.watch(appStateProvider);
     final themeProvider = ref.watch(themesProvider);
-    ref.read(themesProvider.notifier).changeTheme(int.parse(appState.settings["theme"]));
+    Future((){ref.read(themesProvider.notifier).changeTheme(int.parse(appState.settings["theme"]));});
 
 
     return MaterialApp(

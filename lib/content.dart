@@ -79,6 +79,11 @@ class _ContentState extends State<Content> {
         actualText: lines.join("\n"),
         maxLine: groups.isEmpty ? 1 : groups[0]["maxLine"] ?? 1,
       );
+    } else if ( widget.contentData!.mode == Modes.gophermap) {
+      var lines = widget.contentData!.lines;
+      var groups = analyzeGopher(lines)!;
+      var result = groupsToWidget(groups);
+      return result;
     } else if (widget.contentData!.mode == Modes.gem) {
       var lines = widget.contentData!.lines;
       var groups = analyze(lines)!;

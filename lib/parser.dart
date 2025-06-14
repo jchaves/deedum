@@ -9,6 +9,21 @@ import 'package:dumdeedum/models/content_data.dart';
 
 const allowMalformedUtf8Decoder = Utf8Decoder(allowMalformed: true);
 
+void parseGopher(ContentData parsedData, Uint8List newBytes) {
+  parsedData.bytesBuilder!.add(newBytes);
+
+  parsedData.contentType = ContentType.text;
+  if (parsedData.loadedUri?.pathSegments.last == 'gophermap' ||
+      parsedData.loadedUri?.pathSegments.last == '/'
+  ) {
+    parsedData.mode = Modes.gophermap;
+  }else{
+    parsedData.mode = Modes.plain;
+  }
+  parsedData.upsertToByteStream(newBytes);
+
+}
+
 void parse(ContentData parsedData, Uint8List newBytes) {
   parsedData.bytesBuilder!.add(newBytes);
 
@@ -145,6 +160,51 @@ List<dynamic>? analyze(List<String> lines, {alwaysPre = false}) {
       r["groups"]
           .add({"type": "list", "data": StringBuffer(line.substring(2))});
     } else {
+      addToGroup(r, "line", line);
+    }
+    return r;
+  });
+  List? groups = lineInfo["groups"];
+  return groups?.map((e) {
+    e["data"] = e["data"].toString();
+    return e;
+  }).toList();
+}
+
+
+List<dynamic>? analyzeGopher(List<String> lines, {alwaysPre = false}) {
+  var lineInfo = lines.fold({"groups": [], "parse?": true}, (dynamic r, line) {
+    if (line.startsWith("i")) {
+      var towrap= line.split('\t')[0].substring(1);
+      addToGroup(r, "pre", towrap);
+    } else if (line.startsWith("0") ||
+        line.startsWith("1") ||
+        line.startsWith("h") ) {
+
+      var type=line[0];
+
+        var parts = line.substring(1).split('\t');
+        var link = "";
+        if (parts.length == 4) {
+          if(type == 'h'){
+            // "URL:https://domain.whatever
+            link = parts[1].substring(4);
+          }else {
+            //name, path, host, port
+            link = "gopher://" + parts[2] + ':' + parts[3] + '/' + type + parts[1];
+          }
+          r["groups"]
+              .add(
+              {"type": "link", "link": link, "data": StringBuffer(parts[0])});
+        } else {
+          // kind of default, add as is
+          addToGroup(r, "line", line);
+        }
+
+    }
+
+    else{
+      // kind of default, add as is
       addToGroup(r, "line", line);
     }
     return r;

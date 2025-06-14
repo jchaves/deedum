@@ -9,6 +9,7 @@ enum Modes {
   loading,
   error,
   gem,
+  gophermap,
   plain,
   image,
   binary,
