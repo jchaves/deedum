@@ -300,7 +300,8 @@ class AppState with ChangeNotifier {
   }
 
   bool handleBack() {
-    return tabState.current()!.handleBack(identities, feeds);
+    //only close the app if this is the only tab
+    return tabState.current()!.handleBack(identities, feeds) && ( tabCount() ==1);
   }
 
   bool handleForward() {
