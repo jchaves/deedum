@@ -150,7 +150,7 @@ class TabMenuWidget extends ConsumerWidget {
           PopupMenuItem(
             child: ListTile(
                 leading: Icon(
-                    bookmarked
+                    activeIdentity != null
                         ? Icons.person_remove_outlined
                         : Icons.person_add_outlined,
                     color: Colors.black),
