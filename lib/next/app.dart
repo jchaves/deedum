@@ -13,9 +13,11 @@ import 'package:deedum/directory/tabs.dart';
 import 'package:deedum/models/tab.dart';
 import 'package:deedum/next/address_bar.dart';
 import 'package:deedum/next/browser_tab.dart';
+import 'package:deedum/next/themes_provider.dart';
 import 'package:flutter/material.dart' hide Tab;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart' as foundation;
+
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -120,11 +122,16 @@ class Home extends ConsumerWidget {
   }
 }
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AppState appState = ref.watch(appStateProvider);
+    final themeProvider = ref.watch(themesProvider);
+    ref.read(themesProvider.notifier).changeTheme(int.parse(appState.settings["theme"]));
+
+
     return MaterialApp(
         title: 'deedum',
         navigatorKey: navigatorKey,
@@ -139,6 +146,7 @@ class App extends StatelessWidget {
           primarySwatch: Colors.grey,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        themeMode: themeProvider,
         localizationsDelegates: const [
           DefaultWidgetsLocalizations.delegate,
           DefaultMaterialLocalizations.delegate,
