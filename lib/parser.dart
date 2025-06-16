@@ -9,16 +9,13 @@ import 'package:deedum/models/content_data.dart';
 
 const allowMalformedUtf8Decoder = Utf8Decoder(allowMalformed: true);
 
-void parseGopher(ContentData parsedData, Uint8List newBytes) {
+void parseGopher(ContentData parsedData, Uint8List newBytes, {gophermap = false}) {
   parsedData.bytesBuilder!.add(newBytes);
 
-  parsedData.contentType = ContentType.text;
-  if (parsedData.loadedUri?.pathSegments.last == 'gophermap' ||
-      parsedData.loadedUri?.pathSegments.last == '/'
-  ) {
+  if (gophermap) {
     parsedData.mode = Modes.gophermap;
   }else{
-    parsedData.mode = Modes.plain;
+    parsedData.mode = Modes.gem;
   }
   parsedData.upsertToByteStream(newBytes);
 

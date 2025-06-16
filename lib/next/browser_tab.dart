@@ -29,7 +29,7 @@ class BrowserTab extends ConsumerWidget {
       viewSource: tab.viewingSource &&
           tab.contentData != null &&
           tab.contentData!.bytesBuilder != null &&
-          tab.contentData!.mode == Modes.gem,
+          (tab.contentData!.mode == Modes.gem || tab.contentData!.mode == Modes.gophermap),
       onLocation: appState.onLocation,
       onNewTab: appState.onNewTab,
     );
@@ -48,6 +48,7 @@ class BrowserTab extends ConsumerWidget {
                   style: TextStyle(
                       inherit: true,
                       fontSize: baseFontSize,
+                      // color: Theme.of(context).textTheme.bodyMedium!.color)),
                       color: Theme.of(context).textTheme.bodyText1!.color)),
             )));
   }

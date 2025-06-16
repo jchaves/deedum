@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -62,7 +63,13 @@ class Tab {
     }
     if (parsedData != null) {
       if(location.scheme == 'gopher'){
-        parseGopher(parsedData!, newBytes);
+        parsedData!.contentType = ContentType.text;
+          if (location.pathSegments.length < 2 ||
+              location.pathSegments.first == '1') {
+            parseGopher(parsedData!, newBytes, gophermap: true);
+          }else{
+            parseGopher(parsedData!, newBytes, gophermap: false);
+          }
       }else {
         parse(parsedData!, newBytes);
       }

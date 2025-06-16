@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'dart:typed_data';
@@ -67,7 +66,7 @@ class ContentData {
   }
 
   bool lineBased() {
-    return mode == Modes.gem || mode == Modes.plain;
+    return mode == Modes.gem || mode == Modes.plain || mode == Modes.gophermap;
   }
 
   Uint8List? body() {
