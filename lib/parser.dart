@@ -12,6 +12,10 @@ const allowMalformedUtf8Decoder = Utf8Decoder(allowMalformed: true);
 void parseGopher(ContentData parsedData, Uint8List newBytes, {gophermap = false}) {
   parsedData.bytesBuilder!.add(newBytes);
 
+  //made up, avoids app errors
+  parsedData.status=25;
+  parsedData.meta='text/gopher';
+
   if (gophermap) {
     parsedData.mode = Modes.gophermap;
   }else{
@@ -176,7 +180,9 @@ List<dynamic>? analyzeGopher(List<String> lines, {alwaysPre = false}) {
       addToGroup(r, "pre", towrap);
     } else if (line.startsWith("0") ||
         line.startsWith("1") ||
-        line.startsWith("h") ) {
+        line.startsWith("h") ||
+        line.startsWith("7")
+    ) {
 
       var type=line[0];
 

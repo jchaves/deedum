@@ -287,11 +287,16 @@ Future<bool> fetchGopher(
   var timeout = false;
 
   String itemType = "1";
-  String selector = "";
+  String selector = "/";
   if (uri.path.length >= 2){
     itemType = uri.pathSegments.first;
     if (uri.path.length >3) {
-      selector = uri.path.substring(3);
+      selector = uri.path.substring(2);
+
+      if(uri.hasQuery){
+        //this is how you send a query in gopher??
+        selector = selector+'\t'+uri.query;
+      }
     }
   }
 

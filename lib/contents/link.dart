@@ -1,6 +1,7 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:deedum/browser_tab/search.dart';
 import 'package:deedum/models/app_state.dart';
 import 'package:deedum/shared.dart';
 import 'package:flutter/material.dart';
@@ -39,10 +40,27 @@ class Link extends ConsumerWidget {
             onLongPress: () =>
                 linkLongPressMenu(title, uri, appState.onNewTab, context),
             onTap: () {
-              appState.onLocation(uri);
+              if(uri.scheme == "gopher" && uri.pathSegments.first == "7"){
+                showSearchDialog(uri, context, appState);
+              }else {
+                appState.onLocation(uri);
+              }
             }),
         ignoring: appState.currentLoading());
   }
+}
+
+Future<void> showSearchDialog(Uri uri, BuildContext context, AppState appState) async {
+  var location = uri;
+  var newLocation = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SearchAlert(prompt: "Type it!", uri: location);
+      });
+  if (newLocation != null) {
+    appState.onLocation(newLocation);
+  }
+  return;
 }
 
 void linkLongPressMenu(title, uri, onNewTab, oldContext) =>

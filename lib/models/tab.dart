@@ -65,7 +65,9 @@ class Tab {
       if(location.scheme == 'gopher'){
         parsedData!.contentType = ContentType.text;
           if (location.pathSegments.length < 2 ||
-              location.pathSegments.first == '1') {
+              location.pathSegments.first == '1' ||
+              location.pathSegments.first == '7'
+          ) {
             parseGopher(parsedData!, newBytes, gophermap: true);
           }else{
             parseGopher(parsedData!, newBytes, gophermap: false);
