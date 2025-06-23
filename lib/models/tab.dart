@@ -63,14 +63,22 @@ class Tab {
     }
     if (parsedData != null) {
       if(location.scheme == 'gopher'){
-        parsedData!.contentType = ContentType.text;
+        //parsedData!.contentType = ContentType.text;
           if (location.pathSegments.length < 2 ||
               location.pathSegments.first == '1' ||
               location.pathSegments.first == '7'
           ) {
-            parseGopher(parsedData!, newBytes, gophermap: true);
-          }else{
-            parseGopher(parsedData!, newBytes, gophermap: false);
+            _handleLog(
+                "debug", "gonna add ${newBytes.length} bytes to gophermap", requestID);
+            parseGopher(parsedData!, newBytes, type: "1" );
+          }else if (location.pathSegments.first == 'I'){
+            _handleLog(
+                "debug", "gonna add ${newBytes.length} bytes to image", requestID);
+            parseGopher(parsedData!, newBytes, type: "I" );
+          } else { 
+            _handleLog(
+                "debug", "gonna add ${newBytes.length} bytes to gophertext", requestID);
+            parseGopher(parsedData!, newBytes, type: "0");
           }
       }else {
         parse(parsedData!, newBytes);
@@ -80,6 +88,22 @@ class Tab {
         contentData?.loadedUri = location;
       }
     }
+    else
+      {
+        if(uri!.hasScheme && uri!.scheme == 'gopher') {
+          //made up, avoids app errors
+          parsedData?.status = 25;
+          parsedData?.meta = 'text/gopher';
+          parsedData?.contentType = ContentType.text;
+
+          if (uri!.pathSegments[1] == '0') {
+            parsedData?.mode = Modes.gophermap;
+          } else {
+            parsedData?.mode = Modes.gem;
+          }
+        }
+
+      }
     notifyListeners();
   }
 
