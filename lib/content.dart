@@ -105,6 +105,7 @@ class _ContentState extends State<Content> {
               })
       );
     } else {
+      // we'll have to add a "save file" dialog here
       return ExtendedText("Unknown mode ${widget.contentData!.mode}");
     }
   }

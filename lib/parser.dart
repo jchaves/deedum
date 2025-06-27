@@ -12,42 +12,42 @@ const allowMalformedUtf8Decoder = Utf8Decoder(allowMalformed: true);
 void parseGopher(ContentData parsedData, Uint8List newBytes, {type = "0"}) {
   parsedData.bytesBuilder!.add(newBytes);
 
-
-
   if (parsedData.mode == Modes.loading) {
-
 
     parsedData.bodyIndex = 0;
     parsedData.status = 25;
 
     if (type == "1") {
       parsedData.contentType = ContentType.parse("text/plain");
-      parsedData.meta = "text/gopher";
+      parsedData.meta = "text/plain";
+      parsedData.mode = Modes.gophermap;
     } else if (type == "I") {
       parsedData.contentType = ContentType.parse("image/jpeg");
       parsedData.meta = "image/jpeg";
+      parsedData.mode = Modes.image;
       // parsedData.bodyIndex = 0;
-    } else {
+    } else if (type == "g") {
+      parsedData.contentType = ContentType.parse("image/gif");
+      parsedData.meta = "image/gif";
+      parsedData.mode = Modes.image;
+      // parsedData.bodyIndex = 0;
+    } else if (type == "9") {
+      parsedData.contentType = ContentType.parse("application/octet-stream");
+      parsedData.meta = "application/octet-stream";
+      parsedData.mode = Modes.binary;
+      // parsedData.bodyIndex = 0;
+    } else if (type == "0") {
       parsedData.contentType = ContentType.parse("text/gemini");
       parsedData.meta = "text/gopher";
-
-    }
-
-    if (parsedData.contentType!.mimeType == "text/gemini") {
       parsedData.mode = Modes.gem;
-    } else if (parsedData.contentType!.mimeType.startsWith("text/")) {
-      parsedData.mode = Modes.gophermap;
-    } else if (parsedData.contentType!.mimeType.startsWith("image/") ||
-        type == "I"
-    ) {
-
-      parsedData.mode = Modes.image;
     } else {
       parsedData.mode = Modes.binary;
     }
   }
 
-  parsedData.upsertToByteStream(newBytes);
+  if (parsedData.lineBased()) {
+    parsedData.upsertToByteStream(newBytes);
+  }
 }
 
 void parse(ContentData parsedData, Uint8List newBytes) {
@@ -206,6 +206,8 @@ List<dynamic>? analyzeGopher(List<String> lines, {alwaysPre = false}) {
         line.startsWith("1") ||
         line.startsWith("h") ||
         line.startsWith("7") ||
+        line.startsWith("8") ||
+        line.startsWith("9") ||
         line.startsWith("I")) {
       var type = line[0];
 
@@ -215,6 +217,9 @@ List<dynamic>? analyzeGopher(List<String> lines, {alwaysPre = false}) {
         if (type == 'h') {
           // "URL:https://domain.whatever
           link = parts[1].substring(4);
+        } else if (type == '8') {
+          // "URL:https://domain.whatever
+          link = "telnet://" + parts[2] + ':' + parts[3] ;
         } else {
           //name, path, host, port
           link =
