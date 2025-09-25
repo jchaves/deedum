@@ -37,9 +37,9 @@ source Envfile
 ./release
 ```
 # Future ?
-- identities linked to pages should be remembered between sessions ? (should be done?)
+- identities linked to pages should be remembered between sessions ? (should be done)
 - automatically detect if there are ANSI codes and not bother processing a pre-text if not? (should be done)
-- Gopher ?
+- Gopher ? (work in progress, should work. input support pending)
 - add some visual feedback on link-ontap ?
 - inline images ?
 - remember open tabs on exit? (or at least ask when closing with some open)

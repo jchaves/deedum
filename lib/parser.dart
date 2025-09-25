@@ -9,19 +9,45 @@ import 'package:deedum/models/content_data.dart';
 
 const allowMalformedUtf8Decoder = Utf8Decoder(allowMalformed: true);
 
-void parseGopher(ContentData parsedData, Uint8List newBytes) {
+void parseGopher(ContentData parsedData, Uint8List newBytes, {type = "0"}) {
   parsedData.bytesBuilder!.add(newBytes);
 
-  parsedData.contentType = ContentType.text;
-  if (parsedData.loadedUri?.pathSegments.last == 'gophermap' ||
-      parsedData.loadedUri?.pathSegments.last == '/'
-  ) {
-    parsedData.mode = Modes.gophermap;
-  }else{
-    parsedData.mode = Modes.plain;
-  }
-  parsedData.upsertToByteStream(newBytes);
+  if (parsedData.mode == Modes.loading) {
 
+    parsedData.bodyIndex = 0;
+    parsedData.status = 25;
+
+    if (type == "1") {
+      parsedData.contentType = ContentType.parse("text/plain");
+      parsedData.meta = "text/plain";
+      parsedData.mode = Modes.gophermap;
+    } else if (type == "I") {
+      parsedData.contentType = ContentType.parse("image/jpeg");
+      parsedData.meta = "image/jpeg";
+      parsedData.mode = Modes.image;
+      // parsedData.bodyIndex = 0;
+    } else if (type == "g") {
+      parsedData.contentType = ContentType.parse("image/gif");
+      parsedData.meta = "image/gif";
+      parsedData.mode = Modes.image;
+      // parsedData.bodyIndex = 0;
+    } else if (type == "9") {
+      parsedData.contentType = ContentType.parse("application/octet-stream");
+      parsedData.meta = "application/octet-stream";
+      parsedData.mode = Modes.binary;
+      // parsedData.bodyIndex = 0;
+    } else if (type == "0") {
+      parsedData.contentType = ContentType.parse("text/gemini");
+      parsedData.meta = "text/gopher";
+      parsedData.mode = Modes.gem;
+    } else {
+      parsedData.mode = Modes.binary;
+    }
+  }
+
+  if (parsedData.lineBased()) {
+    parsedData.upsertToByteStream(newBytes);
+  }
 }
 
 void parse(ContentData parsedData, Uint8List newBytes) {
@@ -171,39 +197,41 @@ List<dynamic>? analyze(List<String> lines, {alwaysPre = false}) {
   }).toList();
 }
 
-
 List<dynamic>? analyzeGopher(List<String> lines, {alwaysPre = false}) {
   var lineInfo = lines.fold({"groups": [], "parse?": true}, (dynamic r, line) {
     if (line.startsWith("i")) {
-      var towrap= line.split('\t')[0].substring(1);
+      var towrap = line.split('\t')[0].substring(1);
       addToGroup(r, "pre", towrap);
     } else if (line.startsWith("0") ||
         line.startsWith("1") ||
-        line.startsWith("h") ) {
+        line.startsWith("h") ||
+        line.startsWith("7") ||
+        line.startsWith("8") ||
+        line.startsWith("9") ||
+        line.startsWith("I")) {
+      var type = line[0];
 
-      var type=line[0];
-
-        var parts = line.substring(1).split('\t');
-        var link = "";
-        if (parts.length == 4) {
-          if(type == 'h'){
-            // "URL:https://domain.whatever
-            link = parts[1].substring(4);
-          }else {
-            //name, path, host, port
-            link = "gopher://" + parts[2] + ':' + parts[3] + '/' + type + parts[1];
-          }
-          r["groups"]
-              .add(
-              {"type": "link", "link": link, "data": StringBuffer(parts[0])});
+      var parts = line.substring(1).split('\t');
+      var link = "";
+      if (parts.length == 4) {
+        if (type == 'h') {
+          // "URL:https://domain.whatever
+          link = parts[1].substring(4);
+        } else if (type == '8') {
+          // "URL:https://domain.whatever
+          link = "telnet://" + parts[2] + ':' + parts[3] ;
         } else {
-          // kind of default, add as is
-          addToGroup(r, "line", line);
+          //name, path, host, port
+          link =
+              "gopher://" + parts[2] + ':' + parts[3] + '/' + type + parts[1];
         }
-
-    }
-
-    else{
+        r["groups"].add(
+            {"type": "link", "link": link, "data": StringBuffer(parts[0])});
+      } else {
+        // kind of default, add as is
+        addToGroup(r, "line", line);
+      }
+    } else {
       // kind of default, add as is
       addToGroup(r, "line", line);
     }

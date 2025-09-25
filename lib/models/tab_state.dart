@@ -25,11 +25,13 @@ class TabState {
     if (tabs.isNotEmpty) {
       return tabs[tabOrder[index]]!;
     }
+    return null;
   }
 
   Tab? current() {
     if (tabIndex >= 0) {
       return fromIndex(tabIndex);
     }
+    return null;
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -62,7 +63,15 @@ class Tab {
     }
     if (parsedData != null) {
       if(location.scheme == 'gopher'){
-        parseGopher(parsedData!, newBytes);
+        //parsedData!.contentType = ContentType.text;
+          if (location.pathSegments.length < 2 ||
+              location.pathSegments.first == '1' ||
+              location.pathSegments.first == '7'
+          ) {
+            parseGopher(parsedData!, newBytes, type: '1' );
+          }else {
+            parseGopher(parsedData!, newBytes, type: location.pathSegments.first );
+          }
       }else {
         parse(parsedData!, newBytes);
       }
@@ -71,6 +80,7 @@ class Tab {
         contentData?.loadedUri = location;
       }
     }
+
     notifyListeners();
   }
 
