@@ -86,11 +86,15 @@ class TabMenuWidget extends ConsumerWidget {
 
   Future<void> showSave(context, AppState appState) async {
     var name = appState.currentUri()!.pathSegments.last;
-    log("name of the file: " + name);
+    if (name == ""){
+      //eventually, we can ask for a filename
+      //this prevents crashing
+      // when viewing a default index.gmi or something
+      name = "temporal_file";
+    }
     var fileBytes = appState.tabState.current()!.contentData!.bytesBuilder!.toBytes();
-    final Directory? downloadsDir = (await getExternalStorageDirectories())!.first;
+    final Directory? downloadsDir = (await getExternalStorageDirectories(type: StorageDirectory.downloads))!.first;
     var filename = downloadsDir!.path + '/' + name;
-    log("name of the file: " + filename);
 
     var count = 1;
     var orig = filename;
