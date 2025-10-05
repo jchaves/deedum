@@ -1,6 +1,9 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
 import 'package:deedum/models/app_state.dart';
 import 'package:deedum/browser_tab/client_cert.dart';
 import 'package:deedum/models/identity.dart';
@@ -19,7 +22,8 @@ enum _MenuSelection {
   root,
   parent,
   forward,
-  identity
+  identity,
+  save
 }
 
 class TabMenuWidget extends ConsumerWidget {
@@ -77,6 +81,55 @@ class TabMenuWidget extends ConsumerWidget {
               ),
             ));
       },
+    );
+  }
+
+  Future<void> showSave(context, AppState appState) async {
+    var name = appState.currentUri()!.pathSegments.last;
+    log("name of the file: " + name);
+    var fileBytes = appState.tabState.current()!.contentData!.bytesBuilder!.toBytes();
+    final Directory? downloadsDir = (await getExternalStorageDirectories())!.first;
+    var filename = downloadsDir!.path + '/' + name;
+    log("name of the file: " + filename);
+
+    var count = 1;
+    var orig = filename;
+    while(File(filename).existsSync()){
+      filename = orig + '.' + count.toString();
+      count++;
+    }
+
+    File destFile = File(filename);
+    await destFile.writeAsBytes(fileBytes);
+
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: const Text('Saved'),
+            contentPadding: EdgeInsets.zero,
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListTile(
+                      title: Text("File saved"),
+                      subtitle: Text(filename),
+                      )
+
+            )
+        );
+      },
+
+
     );
   }
 
@@ -182,6 +235,12 @@ class TabMenuWidget extends ConsumerWidget {
             value: _MenuSelection.source,
             child: const Text("Source"),
           ),
+          const PopupMenuDivider(),
+          const PopupMenuItem(
+              child: ListTile(
+                  leading: Icon(Icons.save, color: Colors.black),
+                  title: Text("Save")),
+              value: _MenuSelection.save),
         ];
       },
       onSelected: (result) async {
@@ -244,6 +303,9 @@ class TabMenuWidget extends ConsumerWidget {
             break;
           case _MenuSelection.forward:
             appState.handleForward();
+            break;
+          case _MenuSelection.save:
+            showSave(context, appState);
             break;
           default:
             throw Exception("Unknown menu selection");
