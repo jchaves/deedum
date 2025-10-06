@@ -29,6 +29,26 @@ enum _MenuSelection {
 class TabMenuWidget extends ConsumerWidget {
   const TabMenuWidget({Key? key}) : super(key: key);
 
+Future<String?> getDownloadPath() async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await getApplicationDocumentsDirectory();
+      } else {
+        directory = Directory('/storage/emulated/0/Download');
+        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+        // ignore: avoid_slow_async_io
+        if (!await directory.exists()) directory = await getExternalStorageDirectory();
+      }
+    } catch (err, stack) {
+      print("Cannot get download folder path");
+    }
+    return directory?.path;
+  }
+
+
+
+
   Future<void> showLogs(context, AppState appState) async {
     return showDialog<void>(
       context: context,
@@ -92,18 +112,30 @@ class TabMenuWidget extends ConsumerWidget {
       // when viewing a default index.gmi or something
       name = "temporal_file";
     }
-    var fileBytes = appState.tabState.current()!.contentData!.bytesBuilder!.toBytes();
-    final Directory? downloadsDir = (await getExternalStorageDirectories(type: StorageDirectory.downloads))!.first;
-    var filename = downloadsDir!.path + '/' + name;
+
+    var fileBytes = appState.tabState.current()!.contentData!.body()!;
+    //bytesBuilder!
+    //  .toBytes();
+
+    log("size of the file: "+ fileBytes.length.toString());
+
+    //getting this value seems to be fucking impossible otherwise
+    //var outputFile = '/storage/emulated/0/Download/' + name;
+
+
+    String outputDir = await getDownloadPath() as String;
+    var outputFile = outputDir + '/' + name;
+
+
 
     var count = 1;
-    var orig = filename;
-    while(File(filename).existsSync()){
-      filename = orig + '.' + count.toString();
+    var orig = outputFile;
+    while(File(outputFile).existsSync()){
+      outputFile = orig + '.' + count.toString();
       count++;
     }
 
-    File destFile = File(filename);
+    File destFile = File(outputFile);
     await destFile.writeAsBytes(fileBytes);
 
 
@@ -126,7 +158,7 @@ class TabMenuWidget extends ConsumerWidget {
               width: double.maxFinite,
               child: ListTile(
                       title: Text("File saved"),
-                      subtitle: Text(filename),
+                      subtitle: Text(outputFile),
                       )
 
             )
