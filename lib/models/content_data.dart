@@ -90,7 +90,11 @@ class ContentData {
   }
 
   Converter<List<int>, String> contentTypeDecoder() {
-    String? charset = contentType?.charset;
+    String? charset = "utf-8";
+    if (mode != Modes.error) {
+      // preventing "contentType not initialized" errors
+      charset = contentType?.charset ;
+    }
     Converter<List<int>, String> decoder;
     if (charset == "iso-8859-1") {
       decoder = const Latin1Decoder(allowInvalid: true);
