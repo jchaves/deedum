@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:deedum/models/app_state.dart';
 import 'package:deedum/directory/directory_element.dart';
@@ -35,7 +34,8 @@ class Tabs extends DirectoryElement {
       if (host == "") {
         host = tab.uri.toString();
       }
-      log("${tab.contentData}");
+      // this was causing "grey tabs" on network errors (!)
+      // log("${tab.contentData}");
       var tabItem = GemItem(
         url: host != null ? Uri.decodeFull(host) : null,
         title: Text(

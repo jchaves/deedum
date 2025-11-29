@@ -1,6 +1,9 @@
 // ignore: unused_import
 import 'dart:developer';
 
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
 import 'package:deedum/models/app_state.dart';
 import 'package:deedum/browser_tab/client_cert.dart';
 import 'package:deedum/models/identity.dart';
@@ -19,11 +22,32 @@ enum _MenuSelection {
   root,
   parent,
   forward,
-  identity
+  identity,
+  save
 }
 
 class TabMenuWidget extends ConsumerWidget {
   const TabMenuWidget({Key? key}) : super(key: key);
+
+Future<String?> getDownloadPath() async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await getApplicationDocumentsDirectory();
+      } else {
+        directory = Directory('/storage/emulated/0/Download');
+        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+        // ignore: avoid_slow_async_io
+        if (!await directory.exists()) directory = await getExternalStorageDirectory();
+      }
+    } catch (err, stack) {
+      print("Cannot get download folder path");
+    }
+    return directory?.path;
+  }
+
+
+
 
   Future<void> showLogs(context, AppState appState) async {
     return showDialog<void>(
@@ -77,6 +101,71 @@ class TabMenuWidget extends ConsumerWidget {
               ),
             ));
       },
+    );
+  }
+
+  Future<void> showSave(context, AppState appState) async {
+    var name = appState.currentUri()!.pathSegments.last;
+    if (name == ""){
+      //eventually, we can ask for a filename
+      //this prevents crashing
+      // when viewing a default index.gmi or something
+      name = "temporal_file";
+    }
+
+    var fileBytes = appState.tabState.current()!.contentData!.body()!;
+    //bytesBuilder!
+    //  .toBytes();
+
+    log("size of the file: "+ fileBytes.length.toString());
+
+    //getting this value seems to be fucking impossible otherwise
+    //var outputFile = '/storage/emulated/0/Download/' + name;
+
+
+    String outputDir = await getDownloadPath() as String;
+    var outputFile = outputDir + '/' + name;
+
+
+
+    var count = 1;
+    var orig = outputFile;
+    while(File(outputFile).existsSync()){
+      outputFile = orig + '.' + count.toString();
+      count++;
+    }
+
+    File destFile = File(outputFile);
+    await destFile.writeAsBytes(fileBytes);
+
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: const Text('Saved'),
+            contentPadding: EdgeInsets.zero,
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListTile(
+                      title: Text("File saved"),
+                      subtitle: Text(outputFile),
+                      )
+
+            )
+        );
+      },
+
+
     );
   }
 
@@ -182,6 +271,12 @@ class TabMenuWidget extends ConsumerWidget {
             value: _MenuSelection.source,
             child: const Text("Source"),
           ),
+          const PopupMenuDivider(),
+          const PopupMenuItem(
+              child: ListTile(
+                  leading: Icon(Icons.save, color: Colors.black),
+                  title: Text("Save")),
+              value: _MenuSelection.save),
         ];
       },
       onSelected: (result) async {
@@ -244,6 +339,9 @@ class TabMenuWidget extends ConsumerWidget {
             break;
           case _MenuSelection.forward:
             appState.handleForward();
+            break;
+          case _MenuSelection.save:
+            showSave(context, appState);
             break;
           default:
             throw Exception("Unknown menu selection");
